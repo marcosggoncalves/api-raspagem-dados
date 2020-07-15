@@ -9,19 +9,11 @@ const raspar  = () => {
             await page.goto("https://www.comilonibus.com.br/site/novidades/categoria-lancamentos");
             
             let urls = await page.evaluate(() => {
+                
                 let results = [];
                 let titulo = document.querySelectorAll('.tt-titulo-conteudo');
                 let link = document.querySelectorAll('.tt-titulo-conteudo a');
                 let img = document.querySelectorAll('img');
-
-                let format  = (text) =>{
-                    let remove = ["_"];
-
-                    for (var i = 0; i < remove.length; i++) {
-                        text =  text.replace(remove[i]," ");
-                    }
-                    return text;
-                }
 
                 img.forEach((item, index) => {
                     if(item.src.search("arquivo/novidade/miniatura") > 0){

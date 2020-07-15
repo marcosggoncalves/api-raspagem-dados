@@ -12,8 +12,10 @@ app.use(function(req, res, next) {
 });
 
 const comil = require('../app/routes/comilRoutes.js');
+const antt = require('../app/routes/anttRoutes.js');
 
 // Carregamanto de rotas.
 app.use('/comil', comil);
+app.use('/antt', antt);
 
 module.exports = app;

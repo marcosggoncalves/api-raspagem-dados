@@ -1,5 +1,5 @@
 module.exports.index = (req,res)=>{
-	const raspagem = require("../../utils/raspagemSiteComil.js");
+	const raspagem = require("../../utils/raspagemSiteAntt.js");
 	const moment = require("moment");
 	const fs = require('fs');
 
@@ -7,9 +7,9 @@ module.exports.index = (req,res)=>{
 
 	let data = moment().format('L');
 
-	fs.exists('comil.json', function(exists){
+	fs.exists('antt.json', function(exists){
 		if(exists){
-			let arquivo =  fs.readFileSync("./comil.json", "utf8");
+			let arquivo =  fs.readFileSync("./antt.json", "utf8");
 
 			arquivo = JSON.parse(arquivo);
 
@@ -17,13 +17,13 @@ module.exports.index = (req,res)=>{
 				raspagem().then((result)=>{
 					result = {"atualizado": data, "noticias": result};
 
-					fs.unlink('comil.json',(error)=>{
+					fs.unlink('antt.json',(error)=>{
 						if(error){
 							return error; 
 						}else{
 							let noticias = JSON.stringify(result);
-							let create = fs.writeFileSync('comil.json', noticias);
-							let arquivo =  fs.readFileSync("comil.json", "utf8");
+							let create = fs.writeFileSync('antt.json', noticias);
+							let arquivo =  fs.readFileSync("antt.json", "utf8");
 
 						 	res.json({
 						 		"success": true,
@@ -52,8 +52,8 @@ module.exports.index = (req,res)=>{
 				result = {"atualizado": data, "noticias": result};
 
 				let noticias = JSON.stringify(result);
-				let create = fs.writeFileSync('comil.json', noticias);
-				let arquivo =  fs.readFileSync("./comil.json", "utf8");
+				let create = fs.writeFileSync('antt.json', noticias);
+				let arquivo =  fs.readFileSync("./antt.json", "utf8");
 
 			 	res.json({
 			 		"success": true,
