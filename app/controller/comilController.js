@@ -11,7 +11,7 @@ module.exports.index = (req,res)=>{
 		if(exists){
 			let arquivo =  fs.readFileSync("./comil.json", "utf8");
 
-			if(arquivo.atualizado  && arquivo.atualizado < data){
+			if(arquivo.atualizado && arquivo.atualizado < data){
 				raspagem().then((result)=>{
 					result.push({"atualizado": data});
 
