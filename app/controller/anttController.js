@@ -36,6 +36,7 @@ module.exports.index = (req,res)=>{
 					return;
 
 				}).catch((error)=>{	
+					console.log(error);
 					res.status(417).json({
 						status: false,
 						message:"Não foi possivel extrair dados!"
