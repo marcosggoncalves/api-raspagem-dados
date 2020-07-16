@@ -1,73 +1,33 @@
 module.exports.index = (req,res)=>{
-	const raspagem = require("../../utils/raspagemSiteAntt.js");
-	const moment = require("moment");
-	const fs = require('fs');
+	const request = require('request');
+    const cheerio = require('cheerio');
+    const moment = require("moment");
 
-	moment.locale('pt-BR');
+    moment.locale('pt-BR');
 
-	let data = moment().format('L');
+    request('https://www.antt.gov.br/web/guest/noticias-e-eventos', function(error, response, html) {
+      	var $ = cheerio.load(html);
 
-	fs.exists('antt.json', function(exists){
-		if(exists){
-			let arquivo =  fs.readFileSync("./antt.json", "utf8");
+        var results = [];
 
-			arquivo = JSON.parse(arquivo);
+        $('.cards a').each(function(i) {
+            let data = $(this).find('.subtexto').eq(0).text().trim();
+            let titulo = $(this).find('.corpo h5').eq(0).text().trim();
+            let imagem = $(this).find('img').eq(0).attr('src');
+            let link = $(this).eq(0).attr('href');
 
-			if(arquivo.atualizado && arquivo.atualizado < data){
-				raspagem().then((result)=>{
-					result = {"atualizado": data, "noticias": result};
+			results.push({
+                titulo: titulo,
+                link: link,
+                imagem: imagem,
+                data:data
+            });            
+        });
 
-					fs.unlink('antt.json',(error)=>{
-						if(error){
-							return error; 
-						}else{
-							let noticias = JSON.stringify(result);
-							let create = fs.writeFileSync('antt.json', noticias);
-							let arquivo =  fs.readFileSync("antt.json", "utf8");
-
-						 	res.json({
-						 		"success": true,
-						 		"status":"Arquivo atualizado com sucesso.",
-						 		"data": JSON.parse(arquivo)
-						 	});
-						}
-					});
-
-					return;
-
-				}).catch((error)=>{	
-					console.log(error);
-					res.status(417).json({
-						status: false,
-						message:"Não foi possivel extrair dados!"
-					});
-				});
-		 	}else{
-		 		res.json({
-			 		"success": true,
-			 		"status":"Arquivo não atualizado.",
-			 		"data":  arquivo
-			 	});
-		 	}
-		}else{	
-			raspagem().then((result)=>{
-				result = {"atualizado": data, "noticias": result};
-
-				let noticias = JSON.stringify(result);
-				let create = fs.writeFileSync('antt.json', noticias);
-				let arquivo =  fs.readFileSync("./antt.json", "utf8");
-
-			 	res.json({
-			 		"success": true,
-			 		"status":"Arquivo criado com sucesso.",
-			 		"data": JSON.parse(arquivo)
-			 	});
-			}).catch((error)=>{		
-				res.status(417).json({
-					status: false,
-					message:"Não foi possivel extrair dados!"
-				});
-			});
-		}
-	});
+        res.json({
+            "atualizado":moment().format('L'),
+			"success": true,
+			"data": results
+		});
+    });
 }

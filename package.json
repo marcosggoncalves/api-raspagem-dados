@@ -10,9 +10,11 @@
   "author": "Marcos Lopes",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "moment": "^2.27.0",
-    "puppeteer": "^5.1.0"
+    "puppeteer": "^5.1.0",
+    "request": "^2.88.2"
   }
 }
