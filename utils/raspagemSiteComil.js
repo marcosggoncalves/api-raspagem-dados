@@ -4,10 +4,7 @@ const raspar  = () => {
     return new Promise(async (resolve, reject) => {
         try {
             const browser = await puppeteer.launch({
-              'args' : [
-                '--no-sandbox',
-                '--disable-setuid-sandbox'
-              ]
+                ignoreDefaultArgs: ['--disable-extensions'],
             });
             
             const page = await browser.newPage();
