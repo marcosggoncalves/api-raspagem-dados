@@ -3,10 +3,8 @@ const puppeteer = require('puppeteer');
 const raspar  = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            const browser = await puppeteer.launch({
-                ignoreDefaultArgs: ['--disable-extensions'],
-            });
-            
+            const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+
             const page = await browser.newPage();
             
             await page.goto("https://www.antt.gov.br/web/guest/noticias-e-eventos");
