@@ -6,7 +6,7 @@ const raspar  = () => {
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
             
-            await page.goto("https://www.comilonibus.com.br/site/novidades/categoria-lancamentos");
+            await page.goto("https://www.comilonibus.com.br/site/novidades/categoria-eventos");
             
             let urls = await page.evaluate(() => {
                 
@@ -16,7 +16,7 @@ const raspar  = () => {
                 let img = document.querySelectorAll('img');
 
                 img.forEach((item, index) => {
-                    if(item.src.search("arquivo/novidade/miniatura") > 0){
+                    if(item.src.search("arquivo/novidade/miniatura") > 0 && index <= 4){
                         results.push({
                             titulo: null,
                             imagem: item.src,
@@ -26,11 +26,15 @@ const raspar  = () => {
                 });
 
                 link.forEach((item, index) => {
-                    results[index]['link'] = item.getAttribute('href');    
+                    if(index < results.length){
+                        results[index]['link'] = item.getAttribute('href');       
+                    }
                 });
 
                 titulo.forEach((item, index) => {
-                    results[index]['titulo'] = item.innerText   
+                    if(index < results.length){
+                        results[index]['titulo'] = item.innerText ;
+                    }  
                 });
 
                 return results;    
