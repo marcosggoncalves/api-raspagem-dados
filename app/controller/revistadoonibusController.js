@@ -11,7 +11,7 @@ module.exports.index = (req,res)=>{
         var results = [];
 
         $('.featured-small-items .news-item').each(function(i) {   
-             if(i < 5){
+             if(i < 4){
                 let data = $(this).find('.posted-date').eq(0).text().trim();
                 let titulo = $(this).find('.entry-title').eq(0).text().trim();
                 let imagem = $(this).find('img').eq(0).attr('src');

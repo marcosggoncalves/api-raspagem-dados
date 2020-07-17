@@ -11,7 +11,7 @@ module.exports.index = (req,res)=>{
         var results = [];
 
         $('.cards a').each(function(i) {
-            if(i < 5){
+            if(i < 4){
                 let data = $(this).find('.subtexto').eq(0).text().trim();
                 let titulo = $(this).find('.corpo h5').eq(0).text().trim();
                 let imagem = $(this).find('img').eq(0).attr('src');
