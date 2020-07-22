@@ -6,22 +6,27 @@ module.exports.index = (req,res)=>{
 
     moment.locale('pt-BR');
 
-    fs.exists('antt.json', function(exists){
-        if(exists && moment().format('mm') === "20"){ // Atualizar em 1 hora
-            fs.unlink('antt.json',(err)=>{
-                if(err) return console.log(err);
-           }); 
-        }
-
+    fs.exists('antt.json',(exists)=>{
         if(exists){
-          res.json(JSON.parse(fs.readFileSync('antt.json')));
+            let data = JSON.parse(fs.readFileSync('antt.json'));
+            let ultimaAtualizacao = moment(data.atualizado,"DD/MM/YYYY HH:mm").format('HH'); // Utima atualização
+
+            if(moment().format('HH') > ultimaAtualizacao){
+                fs.unlink('antt.json',(err)=>{
+                    if(err) return console.log(err);
+                }); 
+                
+                return res.redirect('/antt');
+            }
+
+            res.json(data);
         }else{
             request('https://www.antt.gov.br/web/guest/noticias-e-eventos', function(error, response, html) {
               	var $ = cheerio.load(html);
 
                 var results = [];
 
-                $('.cards a').each(function(i) {
+                $('.cards a').each(function(i){
                     if(i < 4){
                         let data = $(this).find('.subtexto').eq(0).text().trim();
                         let titulo = $(this).find('.corpo h5').eq(0).text().trim();
@@ -38,7 +43,7 @@ module.exports.index = (req,res)=>{
                 });
 
                 let data = {
-                    "atualizado":moment().format('LLL'),
+                    "atualizado":moment().format("DD/MM/YYYY HH:mm"),
                     "success": true,
                     "data": {
                         "noticias": results

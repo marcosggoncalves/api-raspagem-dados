@@ -6,22 +6,27 @@ module.exports.index = (req,res)=>{
 
     moment.locale('pt-BR');
 
-    fs.exists('revista.json', function(exists){
-        if(exists && moment().format('mm') === "20"){ // Atualizar em 1 hora
-            fs.unlink('revista.json',(err)=>{
-                if(err) return console.log(err);
-           }); 
-        }
-
+    fs.exists('revista.json', (exists)=>{
         if(exists){
-          res.json(JSON.parse(fs.readFileSync('revista.json')));
+            let data = JSON.parse(fs.readFileSync('revista.json'));
+            let ultimaAtualizacao = moment(data.atualizado,"DD/MM/YYYY HH:mm").format('HH'); // Utima atualização
+
+            if(moment().format('HH') > ultimaAtualizacao){
+                fs.unlink('revista.json',(err)=>{
+                    if(err) return console.log(err);
+                }); 
+                
+                return res.redirect('/revista');
+            }
+
+            res.json(data);
         }else{ 
-            request('https://revistadoonibus.com/category/brasil/', function(error, response, html) {
+            request('https://revistadoonibus.com/category/brasil/', function(error, response, html){
               	var $ = cheerio.load(html);
 
                 var results = [];
 
-                $('.col-md-8 article').each(function(i) {   
+                $('.col-md-8 article').each(function(i){   
                      if(i < 4){
                         let data = $(this).find('.posted-date').eq(0).text().trim();
                         let titulo = $(this).find('.entry-title').eq(0).text().trim();
@@ -38,7 +43,7 @@ module.exports.index = (req,res)=>{
                 });
 
                 let data = {
-                    "atualizado":moment().format('LLL'),
+                    "atualizado":moment().format('DD/MM/YYYY HH:mm'),
                     "success": true,
                     "data": {
                         "noticias": results
