@@ -21,12 +21,12 @@ module.exports.index = (req,res)=>{
 
             res.json(data);
         }else{ 
-            request('https://revistadoonibus.com', function(error, response, html){
+            request('https://revistadoonibus.com/category/brasil/', function(error, response, html){
               	var $ = cheerio.load(html);
 
                 var results = [];
 
-                $('.featured-small-items .news-item').each(function(i){   
+                $('.col-md-8 article').each(function(i){   
                      if(i < 6){
                         let data = $(this).find('.posted-date').eq(0).text().trim();
                         let titulo = $(this).find('.entry-title').eq(0).text().trim();

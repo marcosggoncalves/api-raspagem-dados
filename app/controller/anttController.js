@@ -21,24 +21,19 @@ module.exports.index = (req,res)=>{
 
             res.json(data);
         }else{
-            request('https://www.antt.gov.br/web/guest/noticias-e-eventos', function(error, response, html) {
+            request('https://www.gov.br/antt/pt-br/assuntos/ultimas-noticias', function(error, response, html) {
               	var $ = cheerio.load(html);
 
                 var results = [];
 
-                $('.cards a').each(function(i){
-                    if(i < 6){
-                        let data = $(this).find('.subtexto').eq(0).text().trim();
-                        let titulo = $(this).find('.corpo h5').eq(0).text().trim();
-                        let imagem = $(this).find('img').eq(0).attr('src');
-                        let link = $(this).eq(0).attr('href');
+                $('.ultimas-noticias li').each(function(i){
 
-                        results.push({
-                            titulo: titulo,
-                            link: `https://www.antt.gov.br/${link}`,
-                            imagem: imagem,
-                            data:data
-                        });  
+                    if(i <= 8){
+                        let descricao = $(this).find('h2').text().trim();
+                        let imagem = $(this).find('img').eq(0).attr('src');
+                        let link = $(this).find('a').eq(0).attr('href');
+
+                        results.push({imagem, link, descricao});  
                     }          
                 });
 

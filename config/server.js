@@ -11,11 +11,11 @@ app.use(function(req, res, next) {
     next();
 });
 
-const comil = require('../app/routes/revistadoonibusRoutes.js');
-const antt = require('../app/routes/anttRoutes.js');
+const revistaOnibus = require('../app/routes/revistadoonibusRoutes.js');
+const anttTransporte = require('../app/routes/anttRoutes.js');
 
 // Carregamanto de rotas.
-app.use('/revista', comil);
-app.use('/antt', antt);
+app.use('/revista', revistaOnibus);
+app.use('/antt', anttTransporte);
 
 module.exports = app;
